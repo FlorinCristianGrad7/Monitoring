@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wemos D1 R1 Control</title>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+  <h1>Wemos D1 R1 Control</h1>
+
+  <div id="sensorData">
+    <p>Senzor de Ploaie: <span id="rainValue">0</span></p>
+    <p>Senzor de Lumina: <span id="lightValue">0</span></p>
+    <p>Senzor de Miscare: <span id="motionValue">0</span></p>
+  </div>
+
+  <button id="fanButton">Control Ventilator</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // Eveniment pentru a primi date de la senzori
+    socket.on('sensorData', (data) => {
+      $('#rainValue').text(data.rain);
+      $('#lightValue').text(data.light);
+      $('#motionValue').text(data.motion);
+    });
+
+    // Eveniment pentru a primi comenzi pentru controlul ventilatorului
+    $('#fanButton').on('click', () => {
+      socket.emit('controlFan', { command: 'toggle' });
+    });
+  </script>
+</body>
+</html>
